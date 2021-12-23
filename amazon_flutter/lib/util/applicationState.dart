@@ -49,9 +49,9 @@ class ApplicationState extends ChangeNotifier implements BaseApplicationState {
 
   StreamSubscription<QuerySnapshot>? _streamSubscription;
 
-  List<Product> _productList = [];
-
-  List<Product> get productList => _productList;
+  // List<Product> _productList = [];
+  //
+  // List<Product> get productList => _productList;
 
   Future<void> init() async {
     await Firebase.initializeApp(
@@ -161,9 +161,9 @@ class ApplicationState extends ChangeNotifier implements BaseApplicationState {
           .orderBy("pid")
           .snapshots()
           .listen((snapshot) {
-        _productList = [];
+        ProductModel.products = [];
         for (final document in snapshot.docs) {
-          _productList.add(Product(
+          ProductModel.products.add(Product(
               pid: document.id,
               title: document.data()["title"] as String,
               price: document.data()["price"] as String,

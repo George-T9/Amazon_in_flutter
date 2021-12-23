@@ -1,5 +1,7 @@
 class ProductModel {
   static List<Product> products = [];
+
+  Product getById(String pid) => products.firstWhere((element) => element.pid == pid, orElse: null);
 }
 
 class Product {

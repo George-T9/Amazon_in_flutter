@@ -1,3 +1,4 @@
+import 'package:amazon_flutter/model/product_model.dart';
 import 'package:amazon_flutter/page/loginPages/main_login_page.dart';
 import 'package:amazon_flutter/util/applicationState.dart';
 import 'package:amazon_flutter/widget/extraWidget.dart';
@@ -68,12 +69,12 @@ class _ProductListState extends State<ProductList> {
               appState.getProduct((e) {
                 showErrorDialog(context, e);
               });
-              if (appState.productList.isNotEmpty) {
+              if (ProductModel.products.isNotEmpty) {
                 return ListView.builder(
                   controller: _scrollController,
-                    itemCount: appState.productList.length,
+                    itemCount: ProductModel.products.length,
                     itemBuilder: (context, index) {
-                      final product = appState.productList[index];
+                      final product = ProductModel.products[index];
                       return ProductListItem(
                         product: product,
                       );
