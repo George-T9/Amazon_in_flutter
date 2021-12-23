@@ -1,5 +1,5 @@
+import 'package:amazon_flutter/enum/enum_states.dart';
 import 'package:amazon_flutter/util/applicationState.dart';
-import 'package:amazon_flutter/util/authentication.dart';
 import 'package:amazon_flutter/util/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -172,7 +172,7 @@ class CreateAccount extends StatelessWidget {
                                     displayNameController.text,
                                     emailController.text,
                                     passwordController.text,
-                                    (e) => _showErrorDialog(context, e));
+                                    (e) => showErrorDialog(context, e));
                                 if (appState.loginState ==
                                     ApplicationLoginState.loggedIn) {
                                   Navigator.pop(context);
@@ -241,7 +241,7 @@ class _SignInEmailFormState extends State<SignInEmailForm> {
                             var verified = await appState.verifyEmail(
                               emailController.text,
                               (e) {
-                                _showErrorDialog(context, e);
+                                showErrorDialog(context, e);
                               },
                             );
                             if (verified) {
@@ -269,37 +269,73 @@ class _SignInEmailFormState extends State<SignInEmailForm> {
   }
 }
 
-void _showErrorDialog(BuildContext context, FirebaseAuthException e) {
+void showErrorDialog(BuildContext context, Exception error) {
   showDialog<void>(
     context: context,
     builder: (context) {
-      return AlertDialog(
-        title: Text(
-          e.code.replaceAll("-", ' ').toTitleCase(),
-          style: const TextStyle(fontSize: 20),
-        ),
-        content: SingleChildScrollView(
-          child: ListBody(
-            children: <Widget>[
-              Text(
-                '${(e as dynamic).message}',
-                style: const TextStyle(fontSize: 18),
-              ),
-            ],
+      if(error.runtimeType == FirebaseAuthException){
+        FirebaseAuthException e = error as FirebaseAuthException;
+        return AlertDialog(
+          title: Text(
+            e.code.replaceAll("-", ' ').toTitleCase(),
+            style: const TextStyle(fontSize: 20),
           ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text(
-              'OK',
-              style: TextStyle(color: Colors.deepPurple),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                  '${(e as dynamic).message}',
+                  style: const TextStyle(fontSize: 18),
+                ),
+              ],
             ),
           ),
-        ],
-      );
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'OK',
+                style: TextStyle(color: Colors.deepPurple),
+              ),
+            ),
+          ],
+        );
+      }
+      else if(error.runtimeType == FirebaseException){
+        FirebaseException e= error as FirebaseException;
+        return AlertDialog(
+          title: Text(
+            e.code.replaceAll("-", ' ').toTitleCase(),
+            style: const TextStyle(fontSize: 20),
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                  '${(e as dynamic).message}',
+                  style: const TextStyle(fontSize: 18),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'OK',
+                style: TextStyle(color: Colors.deepPurple),
+              ),
+            ),
+          ],
+        );
+      }else{
+        return SizedBox.shrink();
+      }
+
     },
   );
 }

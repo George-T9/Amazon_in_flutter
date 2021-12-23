@@ -1,8 +1,7 @@
+import 'package:amazon_flutter/enum/enum_states.dart';
+import 'package:amazon_flutter/page/loginPages/main_login_page.dart';
 import 'package:amazon_flutter/util/applicationState.dart';
-import 'package:amazon_flutter/util/routes.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class PasswordLoginPage extends StatelessWidget {
@@ -63,13 +62,25 @@ class PasswordLoginPage extends StatelessWidget {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: ElevatedButton(onPressed: () {}, child: const Padding(
-                  padding: EdgeInsets.all(14.0),
-                  child: Text("Sign-In"),
-                )),
-              ),
+              Consumer<ApplicationState>(builder:(context,appState,_){
+                if(appState.connectionState == ConnectionStates.busy){
+                  return const Center(child: CircularProgressIndicator(),);
+                }else{
+                  if(appState.loginState == ApplicationLoginState.loggedOut){
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: ElevatedButton(onPressed: () {
+                        appState.signInWithEmailAndPassword("${appState.email}", passwordController.text, (e) => showErrorDialog(context, e));
+                      }, child: const Padding(
+                        padding: EdgeInsets.all(14.0),
+                        child: Text("Sign-In"),
+                      )),
+                    );
+                  }else{
+                    return const SizedBox.shrink();
+                  }
+                }
+              }),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 18.0),
                 child: Row(
