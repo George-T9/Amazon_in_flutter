@@ -2,17 +2,11 @@ import 'package:flutter/material.dart';
 
 class MyTheme {
   static ThemeData lightTheme(BuildContext context) => ThemeData(
-    primarySwatch: Colors.amber,
-    backgroundColor: Colors.amber,
-    primaryColor: Colors.amberAccent,
-    secondaryHeaderColor: Colors.amberAccent[150],
-    brightness: Brightness.light
+      primarySwatch: Colors.deepPurple,
+      backgroundColor: Colors.deepPurple,
+      primaryColor: Colors.deepPurple,
+      secondaryHeaderColor: Colors.deepPurple[150],
+      brightness: Brightness.light);
 
-
-
-  );
-
-  static ThemeData darkTheme(BuildContext context) => ThemeData(
-
-  );
+  static ThemeData darkTheme(BuildContext context) => ThemeData();
 }

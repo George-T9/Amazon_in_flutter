@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:amazon_flutter/enum/enum_states.dart';
+import 'package:amazon_flutter/model/cartModel.dart';
 import 'package:amazon_flutter/model/product_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,6 +23,9 @@ abstract class BaseApplicationState {
   Future<void> signOut();
 
   Future<void> getProduct(void Function(FirebaseException) errorCallback);
+
+  Future<DocumentReference> addProductToCart(
+      void Function(FirebaseException) errorCallback);
 }
 
 class ApplicationState extends ChangeNotifier implements BaseApplicationState {
@@ -49,9 +53,16 @@ class ApplicationState extends ChangeNotifier implements BaseApplicationState {
 
   StreamSubscription<QuerySnapshot>? _streamSubscription;
 
-  // List<Product> _productList = [];
-  //
-  // List<Product> get productList => _productList;
+  List<Product> _productList = [];
+
+  List<Product> get productList => _productList;
+
+  Product getProductById(String pid) =>
+      _productList.firstWhere((element) => element.pid == pid, orElse: null);
+
+  List<Cart> _cart = [];
+
+  List<Cart> get cart => _cart;
 
   Future<void> init() async {
     await Firebase.initializeApp(
@@ -156,14 +167,59 @@ class ApplicationState extends ChangeNotifier implements BaseApplicationState {
   Future<void> getProduct(
       void Function(FirebaseException) errorCallback) async {
     try {
+      var collection =
+          FirebaseFirestore.instance.collection("products_details");
+      var snapshot = await collection.get();
+      ProductModel.products = [];
+      for (final document in snapshot.docs) {
+        ProductModel.products.add(Product(
+            pid: document.id,
+            title: document.data()["title"] as String,
+            price: document.data()["price"] as String,
+            rating: document.data()["rating"] as num,
+            deliveryTime: document.data()["deliveryTime"] as num,
+            discount: document.data()["discount"] as num,
+            freeDelivery: document.data()["freeDelivery"] as bool,
+            imageUrl: document.data()["imageUrls"] as List<dynamic>));
+      }
+      notifyListeners();
+    } on FirebaseException catch (e) {
+      errorCallback(e);
+    }
+  }
+
+  @override
+  void dispose() {
+    _streamSubscription?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Future<DocumentReference<Object?>> addProductToCart(
+      void Function(FirebaseException p1) errorCallback) {
+    if (_loginState == ApplicationLoginState.loggedOut) {
+      throw const Text("");
+    }
+    return FirebaseFirestore.instance
+        .collection("collectionPath")
+        .add(<String, dynamic>{});
+  }
+
+  List<Product> _searchedList = [];
+
+  List<Product> get searchedList => _searchedList;
+
+  Future<void> searchProduct(
+      String searchTerm, void Function(FirebaseException) errorCallback) async {
+    try {
       _streamSubscription = FirebaseFirestore.instance
           .collection("products_details")
-          .orderBy("pid")
+          .where("title", isGreaterThanOrEqualTo: searchTerm.toLowerCase())
           .snapshots()
           .listen((snapshot) {
-        ProductModel.products = [];
+        _searchedList = [];
         for (final document in snapshot.docs) {
-          ProductModel.products.add(Product(
+          _searchedList.add(Product(
               pid: document.id,
               title: document.data()["title"] as String,
               price: document.data()["price"] as String,
@@ -181,8 +237,12 @@ class ApplicationState extends ChangeNotifier implements BaseApplicationState {
     }
   }
 
-  @override
-  void dispose() {_streamSubscription?.cancel();
-    super.dispose();
+  int _carouselSliderPosition = 0;
+
+  int get carouselSliderPosition => _carouselSliderPosition;
+
+  set carouselSliderPosition(int index) {
+    _carouselSliderPosition = index;
+    notifyListeners();
   }
 }

@@ -1,10 +1,12 @@
 import 'package:amazon_flutter/model/product_model.dart';
 import 'package:amazon_flutter/page/loginPages/main_login_page.dart';
+import 'package:amazon_flutter/page/searchPage.dart';
 import 'package:amazon_flutter/util/applicationState.dart';
 import 'package:amazon_flutter/widget/extraWidget.dart';
 import 'package:amazon_flutter/widget/listItemWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
@@ -12,15 +14,31 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Column(
-      children: const [
-        SearchBar(),
-        SizedBox(height: 1,),
-        DeliveryTab(),
-        Expanded(child: ProductList()),
-      ],
-    ));
+    return Scaffold(
+      body: SafeArea(
+          child: Column(
+        children: [
+            InkWell(
+              onTap: () => Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (c, a1, a2) => const SearchPage(),
+                    transitionsBuilder: (c, anim, c2, child) => FadeTransition(
+                      opacity: anim,
+                      child: child,
+                    ),
+                    transitionDuration: const Duration(milliseconds: 00),
+                  )),
+              child: const SearchBar(
+                isVisible: false,
+              )),
+          const SizedBox(
+            height: 3,
+          ),
+          const Expanded(child: ProductList()),
+        ],
+      )),
+    );
   }
 }
 
@@ -62,7 +80,10 @@ class _ProductListState extends State<ProductList> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        FilterTab(isVisible: isVisible,),
+        // const DeliveryTab(),
+        FilterTab(
+          isVisible: isVisible,
+        ),
         Expanded(
           child: Consumer<ApplicationState>(
             builder: (BuildContext context, appState, _) {
@@ -71,7 +92,7 @@ class _ProductListState extends State<ProductList> {
               });
               if (ProductModel.products.isNotEmpty) {
                 return ListView.builder(
-                  controller: _scrollController,
+                    controller: _scrollController,
                     itemCount: ProductModel.products.length,
                     itemBuilder: (context, index) {
                       final product = ProductModel.products[index];

@@ -1,4 +1,4 @@
-import 'package:amazon_flutter/widget/extraWidget.dart';
+import 'package:amazon_flutter/page/searchPage.dart';
 import 'package:count_stepper/count_stepper.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +11,7 @@ class CartPageAS extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SearchBar(),
+            const SearchBar(isVisible: false,),
             Padding(
               padding: const EdgeInsets.all(18.0),
               child: Text(

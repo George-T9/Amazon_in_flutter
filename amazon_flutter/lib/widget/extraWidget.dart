@@ -1,11 +1,12 @@
+import 'package:amazon_flutter/page/afterSignIn/userPageAS.dart';
+import 'package:amazon_flutter/page/searchPage.dart';
 import 'package:amazon_flutter/widget/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 
 class DeliveryTab extends StatelessWidget {
-  const DeliveryTab({Key? key}) : super(key: key);
-
+  const DeliveryTab({Key? key,}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -26,7 +27,8 @@ class DeliveryTab extends StatelessWidget {
 
 class FilterTab extends StatefulWidget {
   bool isVisible = true;
-  FilterTab({Key? key,required this.isVisible}) : super(key: key);
+
+  FilterTab({Key? key, required this.isVisible}) : super(key: key);
 
   @override
   _FilterTabState createState() => _FilterTabState();
@@ -40,7 +42,7 @@ class _FilterTabState extends State<FilterTab> {
     return AnimatedContainer(
         color: MyTheme.lightTheme(context).secondaryHeaderColor,
         duration: const Duration(milliseconds: 200),
-        height: widget.isVisible? 40:0,
+        height: widget.isVisible ? 40 : 0,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 18.0),
           child: Row(
@@ -64,7 +66,9 @@ class _FilterTabState extends State<FilterTab> {
                 child: Row(
                   children: const [
                     Text("Filter"),
-                    SizedBox(width: 4,),
+                    SizedBox(
+                      width: 4,
+                    ),
                     Icon(Icons.keyboard_arrow_down)
                   ],
                 ),
@@ -72,56 +76,5 @@ class _FilterTabState extends State<FilterTab> {
             ],
           ),
         ));
-  }
-}
-
-class SearchBar extends StatelessWidget {
-  const SearchBar({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: MyTheme.lightTheme(context).backgroundColor,
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black38,
-            blurRadius: 2.0,
-            spreadRadius: 0.0,
-            offset: Offset(2.0, 2.0), // shadow direction: bottom right
-          )
-        ],),
-      height: 60,
-      // ,
-      child: Row(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(18, 6, 6, 6),
-              child: TextFormField(
-                decoration: const InputDecoration(
-                  contentPadding: EdgeInsets.all(0),
-                  focusColor: Colors.white,
-                  fillColor: Colors.white,
-                  hoverColor: Colors.white,
-                  filled: true,
-                  prefixIcon: Icon(Icons.search),
-                  border: OutlineInputBorder(),
-                  suffixIcon: Icon(Icons.camera),
-                  hintText: "Search Amazon.in",
-                ),
-              ),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(
-              Icons.mic,
-              color: Colors.black,
-            ),
-            onPressed: () {},
-          ),
-        ],
-      ),
-    );
   }
 }

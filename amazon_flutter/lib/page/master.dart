@@ -8,6 +8,7 @@ import 'package:amazon_flutter/widget/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'botNavPages/menuPage.dart';
@@ -31,7 +32,6 @@ class MasterPage extends StatefulWidget {
 }
 
 class _MasterPageState extends State<MasterPage> {
-
   List widgetOption = const [
     HomePage(),
     UserPage(),
@@ -42,27 +42,30 @@ class _MasterPageState extends State<MasterPage> {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<BottomNavigationProvider>(context);
-    return Scaffold(
-      body: widgetOption.elementAt(provider.currentIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: provider.currentIndex,
-        onTap: (index) {
-          provider.currentIndex = index;
-        },
-        selectedItemColor: MyTheme.lightTheme(context).backgroundColor,
-        unselectedItemColor: Colors.black,
-        showUnselectedLabels: false,
-        showSelectedLabels: false,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle_rounded), label: "User"),
-          BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.shopping_cart), label: "Cart"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.menu_outlined), label: "Menu"),
-        ],
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(statusBarColor: Colors.deepPurple),
+      child: Scaffold(
+        body: widgetOption.elementAt(provider.currentIndex),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: provider.currentIndex,
+          onTap: (index) {
+            provider.currentIndex = index;
+          },
+          selectedItemColor: MyTheme.lightTheme(context).backgroundColor,
+          unselectedItemColor: Colors.black,
+          showUnselectedLabels: false,
+          showSelectedLabels: false,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.account_circle_rounded), label: "User"),
+            BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.shopping_cart), label: "Cart"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.menu_outlined), label: "Menu"),
+          ],
         ),
+      ),
     );
   }
 }

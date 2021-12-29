@@ -1,4 +1,6 @@
 import 'package:amazon_flutter/firebase_options.dart';
+import 'package:amazon_flutter/page/product_details.dart';
+import 'package:amazon_flutter/page/searchPage.dart';
 import 'package:amazon_flutter/util/applicationState.dart';
 import 'package:amazon_flutter/page/loginPages/loginOtpPage.dart';
 import 'package:amazon_flutter/page/loginPages/loginPasswordPage.dart';
@@ -6,6 +8,7 @@ import 'package:amazon_flutter/page/loginPages/login_option_page.dart';
 import 'package:amazon_flutter/page/loginPages/main_login_page.dart';
 import 'package:amazon_flutter/page/master.dart';
 import 'package:amazon_flutter/util/routes.dart';
+import 'package:amazon_flutter/widget/extraWidget.dart';
 import 'package:amazon_flutter/widget/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -24,8 +27,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<ApplicationState>(create: (_) =>ApplicationState()),
+        ChangeNotifierProvider<ApplicationState>(
+            create: (_) => ApplicationState()),
         ChangeNotifierProvider.value(value: BottomNavigationProvider()),
+        ChangeNotifierProvider.value(value: SearchProvider())
       ],
       child: MaterialApp(
         title: "Amazon in Flutter",
@@ -44,10 +49,11 @@ class MyApp extends StatelessWidget {
               ),
           MyRoutes.passLoginRoute: (context) => const PasswordLoginPage(),
           MyRoutes.otpLoginRoute: (context) => const OtpLoginPage(),
+          MyRoutes.searchRoute: (context) => const SearchPage(),
+          MyRoutes.productDetails: (context) => ProductDetails(),
         },
       ),
-    );
-
-    // );
+    );// );
   }
+
 }
