@@ -11,7 +11,7 @@ class ProductListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Navigator.pushNamed(context, MyRoutes.productDetails),
+      onTap: () => Navigator.pushNamed(context, MyRoutes.productDetails,arguments: product),
       child: SizedBox(
         height: 170,
         child: Card(

@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import 'botNavPages/menuPage.dart';
+import '../../lib2/page/botNavPages/menuPage.dart';
 
 class BottomNavigationProvider with ChangeNotifier {
   int _currentIndex = 0;

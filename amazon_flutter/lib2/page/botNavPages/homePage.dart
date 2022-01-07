@@ -30,7 +30,7 @@ class HomePage extends StatelessWidget {
                     transitionDuration: const Duration(milliseconds: 00),
                   )),
               child: const SearchBar(
-                isVisible: false,
+                isVisible: false,backButton: false,
               )),
           const SizedBox(
             height: 3,

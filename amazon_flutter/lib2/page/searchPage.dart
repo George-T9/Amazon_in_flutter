@@ -136,8 +136,8 @@ class SearchProvider with ChangeNotifier {
 }
 
 class SearchBar extends StatefulWidget {
-  const SearchBar({Key? key, this.isVisible = true}) : super(key: key);
-  final bool isVisible;
+  const SearchBar({Key? key, this.isVisible = true,this.backButton=true}) : super(key: key);
+  final bool isVisible,backButton;
 
   @override
   _SearchBarState createState() => _SearchBarState();
@@ -162,12 +162,12 @@ class _SearchBarState extends State<SearchBar> {
       ),
       child: Padding(
         padding: EdgeInsets.only(
-            top: 10, bottom: 8, left: widget.isVisible ? 0 : 18),
+            top: 10, bottom: 8, left: widget.isVisible? 0 : widget.backButton ? 0:10),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Visibility(
-              visible: widget.isVisible,
+              visible: widget.backButton,
               child: IconButton(
                   onPressed: () {
                     Navigator.pop(context);

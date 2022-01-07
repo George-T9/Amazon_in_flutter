@@ -24,6 +24,8 @@ abstract class BaseApplicationState {
 
   Future<void> getProduct(void Function(FirebaseException) errorCallback);
 
+  Future<void> getProductDetails(String pid,void Function(FirebaseException) errorCallback);
+
   Future<DocumentReference> addProductToCart(
       void Function(FirebaseException) errorCallback);
 }
@@ -53,14 +55,14 @@ class ApplicationState extends ChangeNotifier implements BaseApplicationState {
 
   StreamSubscription<QuerySnapshot>? _streamSubscription;
 
-  List<Product> _productList = [];
+  final List<Product> _productList = [];
 
   List<Product> get productList => _productList;
 
   Product getProductById(String pid) =>
       _productList.firstWhere((element) => element.pid == pid, orElse: null);
 
-  List<Cart> _cart = [];
+  final List<Cart> _cart = [];
 
   List<Cart> get cart => _cart;
 
@@ -205,44 +207,20 @@ class ApplicationState extends ChangeNotifier implements BaseApplicationState {
         .add(<String, dynamic>{});
   }
 
-  List<Product> _searchedList = [];
+  @override
+  Future<dynamic> getProductDetails(String pid, void Function(FirebaseException) errorCallback) async {
+    try{
+      var collection = FirebaseFirestore.instance.collection("product_details");
+      var document= await collection.doc(pid).get();
+      Map<String, dynamic>? data;
+      if(document.exists){
+        data = document.data();
+      }
+      return data;
+    }on FirebaseException catch(e){
 
-  List<Product> get searchedList => _searchedList;
-
-  Future<void> searchProduct(
-      String searchTerm, void Function(FirebaseException) errorCallback) async {
-    try {
-      _streamSubscription = FirebaseFirestore.instance
-          .collection("products_details")
-          .where("title", isGreaterThanOrEqualTo: searchTerm.toLowerCase())
-          .snapshots()
-          .listen((snapshot) {
-        _searchedList = [];
-        for (final document in snapshot.docs) {
-          _searchedList.add(Product(
-              pid: document.id,
-              title: document.data()["title"] as String,
-              price: document.data()["price"] as String,
-              rating: document.data()["rating"] as num,
-              deliveryTime: document.data()["deliveryTime"] as num,
-              discount: document.data()["discount"] as num,
-              freeDelivery: document.data()["freeDelivery"] as bool,
-              imageUrl: document.data()["imageUrls"] as List<dynamic>));
-        }
-        _streamSubscription?.cancel();
-        notifyListeners();
-      });
-    } on FirebaseException catch (e) {
-      errorCallback(e);
     }
   }
 
-  int _carouselSliderPosition = 0;
 
-  int get carouselSliderPosition => _carouselSliderPosition;
-
-  set carouselSliderPosition(int index) {
-    _carouselSliderPosition = index;
-    notifyListeners();
-  }
 }

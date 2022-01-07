@@ -37,6 +37,7 @@ class MyApp extends StatelessWidget {
         themeMode: ThemeMode.light,
         theme: MyTheme.lightTheme(context),
         initialRoute: "/",
+
         routes: {
           "/": (context) => const MasterPage(),
           MyRoutes.masterRoute: (context) => const MasterPage(),
@@ -51,9 +52,9 @@ class MyApp extends StatelessWidget {
           MyRoutes.otpLoginRoute: (context) => const OtpLoginPage(),
           MyRoutes.searchRoute: (context) => const SearchPage(),
           MyRoutes.productDetails: (context) => ProductDetails(),
+
         },
       ),
-    );// );
+    ); // );
   }
-
 }

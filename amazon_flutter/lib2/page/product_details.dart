@@ -1,13 +1,19 @@
 import 'package:amazon_flutter/page/searchPage.dart';
+import 'package:amazon_flutter/util/applicationState.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
+import 'package:amazon_flutter/model/product_model.dart';
+
 
 class ProductDetails extends StatelessWidget {
+
   const ProductDetails({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+    final product = ModalRoute.of(context)!.settings.arguments as Product;
     return Scaffold(
       body: SafeArea(
           child: Column(
@@ -24,7 +30,7 @@ class ProductDetails extends StatelessWidget {
                     transitionDuration: const Duration(milliseconds: 00),
                   )),
               child: const SearchBar(
-                isVisible: false,
+                isVisible: false,backButton: true,
               )),
           Expanded(
             child: SingleChildScrollView(
@@ -32,13 +38,13 @@ class ProductDetails extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                    padding: const EdgeInsets.symmetric(vertical: 16.0,horizontal: 14),
                     child: Text(
-                      "Apple iPhone XR (64GB) - White",
+                      product.title,
                       style: Theme.of(context).textTheme.subtitle1,
                     ),
                   ),
-                  const CaroSlider(),
+                  CaroSlider(product: product,),
                   const SizedBox(
                     height: 8,
                   ),
@@ -46,7 +52,7 @@ class ProductDetails extends StatelessWidget {
                   const SizedBox(
                     height: 8,
                   ),
-                  const PriceBox(),
+                  PriceBox(product: product),
                   const SizedBox(
                     height: 8,
                   ),
@@ -207,7 +213,8 @@ class _ExpansionColourAndTypeState extends State<ExpansionColourAndType> {
 }
 
 class CaroSlider extends StatefulWidget {
-  const CaroSlider({Key? key}) : super(key: key);
+  final Product? product;
+  const CaroSlider({Key? key,required this.product}) : super(key: key);
 
   @override
   _CaroSliderState createState() => _CaroSliderState();
@@ -216,16 +223,11 @@ class CaroSlider extends StatefulWidget {
 class _CaroSliderState extends State<CaroSlider> {
   int _curPosition = 0;
 
-  final List<String> _imageUrlList = [
-    "https://m.media-amazon.com/images/I/51PuFBgBK4L._SL1024_.jpg",
-    "https://m.media-amazon.com/images/I/51gdkUuU26L._SL1024_.jpg",
-    "https://m.media-amazon.com/images/I/41svnYkwUwL._SL1024_.jpg",
-    "https://m.media-amazon.com/images/I/41UGBBFxXtL._SL1024_.jpg",
-    "https://m.media-amazon.com/images/I/51W40Z3SaXL._SL1024_.jpg",
-  ];
+
 
   @override
   Widget build(BuildContext context) {
+    final List<dynamic> _imageUrlList = widget.product!.imageUrl;
     return Container(
       padding: const EdgeInsets.only(top: 20),
       decoration: const BoxDecoration(color: Colors.white, boxShadow: [
@@ -241,6 +243,7 @@ class _CaroSliderState extends State<CaroSlider> {
             options: CarouselOptions(
               enlargeCenterPage: true,
               height: 500,
+              enableInfiniteScroll: false,
               initialPage: 0,
               onPageChanged: (index, reason) {
                 setState(() {
@@ -289,8 +292,9 @@ class GetImage extends StatelessWidget {
 }
 
 class PriceBox extends StatelessWidget {
-  const PriceBox({Key? key}) : super(key: key);
+  const PriceBox({Key? key, required this.product}) : super(key: key);
 
+  final Product? product;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -316,7 +320,7 @@ class PriceBox extends StatelessWidget {
                   fit: FlexFit.tight,
                   flex: 3,
                   child: Text(
-                    "  63000",
+                    "  ${product?.price}",
                     style: Theme.of(context).textTheme.subtitle1,
                   )),
             ],
@@ -412,9 +416,9 @@ class UserOption extends StatelessWidget {
            Text("Total : 30000",style: Theme.of(context).textTheme.headline6,),
           const Divider(),
           Text("Free Delivery : Wednesday, Jan 5",style: Theme.of(context).textTheme.subtitle1,),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: const Text("In Stock",style: TextStyle(color: Colors.deepPurple),),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 14.0),
+            child: Text("In Stock",style: TextStyle(color: Colors.deepPurple),),
           ),
           ElevatedButton(
               onPressed: () {},
@@ -422,6 +426,7 @@ class UserOption extends StatelessWidget {
                 padding: EdgeInsets.all(12.0),
                 child: Text("Buy Now"),
               )),
+          const SizedBox(height: 8,),
           ElevatedButton(
               onPressed: () {},
               child: const Padding(
