@@ -93,14 +93,14 @@ class SearchResult extends StatelessWidget {
             "RESULTS",
             style: Theme.of(context).textTheme.subtitle1,
           ),
-          ListView.builder(
-              shrinkWrap: true,
-              physics: const ScrollPhysics(),
-              itemCount: provider.searchList.length,
-              itemBuilder: (context, index) {
-                final product = provider.searchList[index];
-                return ProductListRow(product: product);
-              })
+          // ListView.builder(
+          //     shrinkWrap: true,
+          //     physics: const ScrollPhysics(),
+          //     itemCount: provider.searchList.length,
+          //     itemBuilder: (context, index) {
+          //       final product = provider.searchList[index];
+          //       return ProductListRow(product: product);
+          //     })
         ],
       ),
     );

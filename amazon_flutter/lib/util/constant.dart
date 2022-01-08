@@ -1,0 +1,1 @@
+const firebaseCollection = "products";

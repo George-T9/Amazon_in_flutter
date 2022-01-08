@@ -1,28 +1,14 @@
-import 'package:amazon_flutter/page/afterSignIn/cartPageAS.dart';
-import 'package:amazon_flutter/page/afterSignIn/userPageAS.dart';
-import 'package:amazon_flutter/page/beforeSignIn/cartPageBS.dart';
-import 'package:amazon_flutter/page/botNavPages/homePage.dart';
-import 'package:amazon_flutter/page/beforeSignIn/userPageBS.dart';
-import 'package:amazon_flutter/util/applicationState.dart';
-import 'package:amazon_flutter/widget/theme.dart';
+import 'package:amazon_flutter/util/theme.dart';
+import 'package:amazon_flutter/view/cart_view/cartPageAS.dart';
+import 'package:amazon_flutter/view/home_view/home_view.dart';
+import 'package:amazon_flutter/view/menu_view/MenuView.dart';
+import 'package:amazon_flutter/view/user_view/userPageAS.dart';
+import 'package:amazon_flutter/viewmodel/bottom_navigation_notifier.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-
-import '../../lib2/page/botNavPages/menuPage.dart';
-
-class BottomNavigationProvider with ChangeNotifier {
-  int _currentIndex = 0;
-
-  int get currentIndex => _currentIndex;
-
-  set currentIndex(int index) {
-    _currentIndex = index;
-    notifyListeners();
-  }
-}
 
 class MasterPage extends StatefulWidget {
   const MasterPage({Key? key}) : super(key: key);
@@ -33,15 +19,16 @@ class MasterPage extends StatefulWidget {
 
 class _MasterPageState extends State<MasterPage> {
   List widgetOption = const [
-    HomePage(),
+    HomeView(),
     UserPage(),
     CartPage(),
     MenuPage(),
+
   ];
 
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<BottomNavigationProvider>(context);
+    var provider = Provider.of<BottomNavViewModel>(context);
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(statusBarColor: Colors.deepPurple),
       child: Scaffold(
@@ -69,47 +56,47 @@ class _MasterPageState extends State<MasterPage> {
     );
   }
 }
-
-class UserPage extends StatelessWidget {
-  const UserPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final _applicationState = Provider.of<ApplicationState>(context);
-    return FutureBuilder<User?>(
-      future: _applicationState.getCurrent(),
-      builder: (_, AsyncSnapshot<User?> snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          final User? user = snapshot.data;
-          return user == null ? const UserPageBS() : const UserPageAS();
-        } else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
-    );
-  }
-}
-
-class CartPage extends StatelessWidget {
-  const CartPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final _applicationState = Provider.of<ApplicationState>(context);
-    return FutureBuilder<User?>(
-      future: _applicationState.getCurrent(),
-      builder: (_, AsyncSnapshot<User?> snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          final User? user = snapshot.data;
-          return user == null ? const CartPageBS() : const CartPageAS();
-        } else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
-    );
-  }
-}
+//
+// class UserPage extends StatelessWidget {
+//   const UserPage({Key? key}) : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final _applicationState = Provider.of<ApplicationState>(context);
+//     return FutureBuilder<User?>(
+//       future: _applicationState.getCurrent(),
+//       builder: (_, AsyncSnapshot<User?> snapshot) {
+//         if (snapshot.connectionState == ConnectionState.done) {
+//           final User? user = snapshot.data;
+//           return user == null ? const UserPageBS() : const UserPageAS();
+//         } else {
+//           return const Center(
+//             child: CircularProgressIndicator(),
+//           );
+//         }
+//       },
+//     );
+//   }
+// }
+//
+// class CartPage extends StatelessWidget {
+//   const CartPage({Key? key}) : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final _applicationState = Provider.of<ApplicationState>(context);
+//     return FutureBuilder<User?>(
+//       future: _applicationState.getCurrent(),
+//       builder: (_, AsyncSnapshot<User?> snapshot) {
+//         if (snapshot.connectionState == ConnectionState.done) {
+//           final User? user = snapshot.data;
+//           return user == null ? const CartPageBS() : const CartPageAS();
+//         } else {
+//           return const Center(
+//             child: CircularProgressIndicator(),
+//           );
+//         }
+//       },
+//     );
+//   }
+// }

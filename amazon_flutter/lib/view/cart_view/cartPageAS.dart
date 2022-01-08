@@ -1,5 +1,5 @@
 import 'package:amazon_flutter/components/search_bar.dart';
-import 'package:amazon_flutter/view/loginView/cartPageBS.dart';
+import 'package:amazon_flutter/view/cart_view/cartPageBS.dart';
 import 'package:amazon_flutter/viewmodel/user_notifier.dart';
 import 'package:count_stepper/count_stepper.dart';
 import 'package:flutter/material.dart';

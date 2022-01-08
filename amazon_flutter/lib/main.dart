@@ -1,22 +1,30 @@
 import 'package:amazon_flutter/firebase_options.dart';
-import 'package:amazon_flutter/page/product_details.dart';
-import 'package:amazon_flutter/page/searchPage.dart';
-import 'package:amazon_flutter/util/applicationState.dart';
-import 'package:amazon_flutter/page/loginPages/loginOtpPage.dart';
-import 'package:amazon_flutter/page/loginPages/loginPasswordPage.dart';
-import 'package:amazon_flutter/page/loginPages/login_option_page.dart';
-import 'package:amazon_flutter/page/loginPages/main_login_page.dart';
-import 'package:amazon_flutter/page/master.dart';
+import 'package:amazon_flutter/services/authentication_service.dart';
+import 'package:amazon_flutter/services/firebase_service.dart';
 import 'package:amazon_flutter/util/routes.dart';
-import 'package:amazon_flutter/widget/extraWidget.dart';
-import 'package:amazon_flutter/widget/theme.dart';
+import 'package:amazon_flutter/util/theme.dart';
+import 'package:amazon_flutter/view/login_view/loginOtpPage.dart';
+import 'package:amazon_flutter/view/login_view/loginPasswordPage.dart';
+import 'package:amazon_flutter/view/login_view/login_option_page.dart';
+import 'package:amazon_flutter/view/login_view/main_login_page.dart';
+import 'package:amazon_flutter/view/master.dart';
+import 'package:amazon_flutter/view/product/product_detail_view.dart';
+import 'package:amazon_flutter/view/search/searchView.dart';
+import 'package:amazon_flutter/viewmodel/bottom_navigation_notifier.dart';
+import 'package:amazon_flutter/viewmodel/product_notifier.dart';
+import 'package:amazon_flutter/viewmodel/user_notifier.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+
+final GetIt getIt = GetIt.instance;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  getIt.registerSingleton<AuthenticationService>(AuthenticationService(),signalsReady: true);
+  getIt.registerSingleton<FirebaseService>(FirebaseService(),signalsReady: true);
   runApp(const MyApp());
 }
 
@@ -27,17 +35,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<ApplicationState>(
-            create: (_) => ApplicationState()),
-        ChangeNotifierProvider.value(value: BottomNavigationProvider()),
-        ChangeNotifierProvider.value(value: SearchProvider())
+        ChangeNotifierProvider<ProductViewModel>(
+            create: (_) => ProductViewModel()),
+        ChangeNotifierProvider(create: (_) => UserViewModel()),
+        ChangeNotifierProvider.value(value: BottomNavViewModel())
       ],
       child: MaterialApp(
         title: "Amazon in Flutter",
         themeMode: ThemeMode.light,
         theme: MyTheme.lightTheme(context),
         initialRoute: "/",
-
         routes: {
           "/": (context) => const MasterPage(),
           MyRoutes.masterRoute: (context) => const MasterPage(),
@@ -51,8 +58,7 @@ class MyApp extends StatelessWidget {
           MyRoutes.passLoginRoute: (context) => const PasswordLoginPage(),
           MyRoutes.otpLoginRoute: (context) => const OtpLoginPage(),
           MyRoutes.searchRoute: (context) => const SearchPage(),
-          MyRoutes.productDetails: (context) => ProductDetails(),
-
+          MyRoutes.productDetails: (context) => const ProductDetails(),
         },
       ),
     ); // );

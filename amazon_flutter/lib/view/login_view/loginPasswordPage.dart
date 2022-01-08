@@ -7,6 +7,7 @@ class PasswordLoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userVm = Provider.of<UserViewModel>(context);
     TextEditingController passwordController = TextEditingController();
     return Scaffold(
       appBar: AppBar(),
@@ -18,19 +19,18 @@ class PasswordLoginPage extends StatelessWidget {
             children: [
               Text(
                 "Sign-In",
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .headline5,
+                style: Theme.of(context).textTheme.headline5,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 18.0),
                 child: Row(
                   children: [
-                    Consumer<UserViewModel>(builder: (BuildContext context, userState, Widget? child) => Text("${userState.email}"),),
-                    TextButton(onPressed: () {
-                      Navigator.pop(context);
-                    }, child: const Text("change"))
+                    Text(userVm.email.toString()),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text("change"))
                   ],
                 ),
               ),
@@ -60,23 +60,28 @@ class PasswordLoginPage extends StatelessWidget {
                   ],
                 ),
               ),
-              Consumer<UserViewModel>(builder:(context,userState,_){
-                if(userState.connectionState == ConnectionState.waiting){
-                  return const Center(child: CircularProgressIndicator(),);
-                }else{
-                  if(userState.currentUser == null){
+              Consumer<UserViewModel>(builder: (context, userState, _) {
+                if (userState.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  if (userState.currentUser == null) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: ElevatedButton(onPressed: () {
-                        userState.signIn("${userState.email}", passwordController.text,
-                                // (e) => showErrorDialog(context, e)
-                        );
-                      }, child: const Padding(
-                        padding: EdgeInsets.all(14.0),
-                        child: Text("Sign-In"),
-                      )),
+                      child: ElevatedButton(
+                          onPressed: () {
+                            userState.signIn(
+                              "${userState.email}", passwordController.text,
+                              // (e) => showErrorDialog(context, e)
+                            );
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.all(14.0),
+                            child: Text("Sign-In"),
+                          )),
                     );
-                  }else{
+                  } else {
                     return const SizedBox.shrink();
                   }
                 }

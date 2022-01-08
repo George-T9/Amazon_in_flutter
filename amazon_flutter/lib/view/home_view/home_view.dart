@@ -1,6 +1,6 @@
 import 'package:amazon_flutter/components/product_listrow.dart';
 import 'package:amazon_flutter/components/search_bar.dart';
-import 'package:amazon_flutter/view/searchView.dart';
+import 'package:amazon_flutter/view/search/searchView.dart';
 import 'package:amazon_flutter/viewmodel/product_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -12,17 +12,17 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<ProductViewModel>(context).getAllProduct();
+    print("created 1}");
     return Scaffold(
       body: SafeArea(
           child: Column(
         children: [
           InkWell(
-              onTap: () => Navigator.push(
-                  context,
-                  route.controller(route.searchRoute)),
+              onTap: () =>
+                  Navigator.push(context, route.controller(route.searchRoute)),
               child: const SearchBar(
-                isVisible: false,backButton: false,
+                isVisible: false,
+                backButton: false,
               )),
           const SizedBox(
             height: 3,
@@ -70,24 +70,22 @@ class _ProductListState extends State<ProductList> {
 
   @override
   Widget build(BuildContext context) {
-    var vm = Provider.of<ProductViewModel>(context);
     return Column(
       children: [
-        // const DeliveryTab(),
-        // FilterTab(
-        //   isVisible: isVisible,
-        // ),
-        Expanded(
-            child: vm.productList.isEmpty
+        Expanded(child: Consumer<ProductViewModel>(
+          builder: (BuildContext context, productViewModel, Widget? child) {
+            return productViewModel.productList.isEmpty
                 ? const Center(child: CircularProgressIndicator())
                 : ListView.builder(
                     controller: _scrollController,
-                    itemCount: vm.productList.length,
+                    itemCount: productViewModel.productList.length,
                     itemBuilder: (BuildContext context, int index) {
-                      var product = vm.productList[index];
+                      var product = productViewModel.productList[index];
                       return ProductListRow(product: product);
                     },
-                  ))
+                  );
+          },
+        ))
       ],
     );
   }

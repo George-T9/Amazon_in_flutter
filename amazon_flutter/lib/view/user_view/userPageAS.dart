@@ -1,5 +1,5 @@
-import 'package:amazon_flutter/view/loginView/userPageBS.dart';
-import 'package:amazon_flutter/view/searchView.dart';
+import 'package:amazon_flutter/view/user_view/userPageBS.dart';
+import 'package:amazon_flutter/view/search/searchView.dart';
 import 'package:amazon_flutter/viewmodel/bottom_navigation_notifier.dart';
 import 'package:amazon_flutter/viewmodel/user_notifier.dart';
 import 'package:firebase_auth/firebase_auth.dart';
