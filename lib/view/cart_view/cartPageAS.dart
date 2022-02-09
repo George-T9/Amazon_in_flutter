@@ -3,6 +3,7 @@ import 'package:amazon_flutter/view/cart_view/cartPageBS.dart';
 import 'package:amazon_flutter/viewmodel/user_notifier.dart';
 import 'package:count_stepper/count_stepper.dart';
 import 'package:flutter/material.dart';
+
 import 'package:provider/provider.dart';
 
 class CartPage extends StatelessWidget {
